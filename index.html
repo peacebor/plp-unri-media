@@ -6,25 +6,33 @@
   <title>Pusat Media Pembelajaran Digital — PLP Edukasi UNRI</title>
   <meta name="description" content="Kumpulan video pembelajaran dari 14 program studi PLP Edukasi Universitas Riau.">
   <meta name="theme-color" content="#0a0f24">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
   <a class="skip" href="#hasil">Lewati ke daftar video</a>
+  <div class="progress" aria-hidden="true"></div>
   <div class="bg" aria-hidden="true"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
   <div class="glow" aria-hidden="true"></div>
 
   <header class="hero wrap">
-    <p class="eyebrow">✨ Universitas Riau • Pengenalan Lapangan Persekolahan</p>
-    <h1>Pusat Media Pembelajaran Digital — <span class="grad">PLP Edukasi UNRI</span></h1>
-    <p class="lead">Belajar jadi lebih seru lewat video pilihan dari 14 program studi. Cari, tonton, dan temukan topik favoritmu.</p>
-    <div class="hero-actions">
-      <a class="btn" href="#hasil">▶ Mulai Nonton</a>
-      <button id="acak" class="btn ghost" type="button">🎲 Acak video</button>
+    <div class="hero-text">
+      <p class="eyebrow">✨ Universitas Riau • Pengenalan Lapangan Persekolahan</p>
+      <h1>Pusat Media Pembelajaran Digital — <span class="grad">PLP Edukasi UNRI</span></h1>
+      <p class="lead">Belajar jadi lebih seru lewat video pilihan dari 14 program studi. Cari, tonton, dan temukan topik favoritmu.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#hasil">▶ Mulai Nonton</a>
+        <button id="acak" class="btn ghost" type="button">🎲 Acak video</button>
+      </div>
+      <dl class="stats">
+        <div><dt>Video</dt><dd id="stat-video">0</dd></div>
+        <div><dt>Program Studi</dt><dd id="stat-prodi">0</dd></div>
+      </dl>
     </div>
-    <dl class="stats">
-      <div><dt>Video</dt><dd id="stat-video" data-to="0">0</dd></div>
-      <div><dt>Program Studi</dt><dd id="stat-prodi" data-to="0">0</dd></div>
-    </dl>
+    <div class="orb" aria-hidden="true">
+      <span class="ring r1"></span><span class="ring r2"></span>
+      <span class="core">▶</span>
+      <em class="fl f1">📚</em><em class="fl f2">🎓</em><em class="fl f3">✨</em><em class="fl f4">🎬</em>
+    </div>
   </header>
 
   <main class="wrap">
@@ -60,7 +68,7 @@
     <p class="player-foot"><a id="player-link" href="#" target="_blank" rel="noopener noreferrer">Buka di YouTube ↗</a></p>
   </dialog>
 
-  <script src="data.js"></script>
-  <script src="script.js"></script>
+  <script src="data.js?v=3"></script>
+  <script src="script.js?v=3"></script>
 </body>
 </html>
