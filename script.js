@@ -1,11 +1,13 @@
 (function () {
   "use strict";
   const $ = (s) => document.querySelector(s);
-  const cari = $("#cari"), selProdi = $("#filter-prodi"), selJenis = $("#filter-jenis");
-  const daftar = $("#daftar"), info = $("#info"), kosong = $("#kosong");
-  const grid = $("#prodi-grid"), tombolReset = $("#reset");
+  const cari = $("#cari"), chips = $("#chips"), daftar = $("#daftar");
+  const info = $("#info"), kosong = $("#kosong");
+  const dlg = $("#player"), box = $("#player-box");
+  let prodiAktif = "";
 
-  const namaProdi = (id) => (PROGRAM_STUDI.find((p) => p.id === id) || {}).nama || id;
+  const indeksProdi = (id) => PROGRAM_STUDI.findIndex((p) => p.id === id);
+  const namaProdi = (id) => (PROGRAM_STUDI[indeksProdi(id)] || {}).nama || id;
 
   function el(tag, cls, teks) {
     const e = document.createElement(tag);
@@ -18,86 +20,145 @@
     try { return new URL(u).protocol === "https:"; } catch (e) { return false; }
   }
 
-  function opsi(select, nilai, label) {
-    const o = document.createElement("option");
-    o.value = nilai; o.textContent = label;
-    select.appendChild(o);
+  function ytId(u) {
+    try {
+      const x = new URL(u);
+      const h = x.hostname.replace(/^www\./, "");
+      let id = null;
+      if (h === "youtu.be") id = x.pathname.slice(1).split("/")[0];
+      else if (h.endsWith("youtube.com")) {
+        id = x.searchParams.get("v");
+        if (!id) { const m = x.pathname.match(/^\/(shorts|embed|live)\/([\w-]+)/); if (m) id = m[2]; }
+      }
+      return id && /^[\w-]{11}$/.test(id) ? id : null;
+    } catch (e) { return null; }
   }
 
-  function isiFilter() {
-    opsi(selProdi, "", "Semua program studi");
-    PROGRAM_STUDI.forEach((p) => opsi(selProdi, p.id, p.nama));
-    opsi(selJenis, "", "Semua jenis");
-    JENIS_MATERI.forEach((j) => opsi(selJenis, j, j));
-  }
+  const bisaDiputar = (v) => !v.placeholder && urlAman(v.tautan);
 
-  function gambarProdi() {
-    grid.textContent = "";
-    PROGRAM_STUDI.forEach((p) => {
-      const jumlah = MATERI.filter((m) => m.prodi === p.id).length;
-      const b = el("button", "prodi-btn");
-      b.type = "button";
-      b.dataset.id = p.id;
-      b.setAttribute("aria-pressed", String(selProdi.value === p.id));
-      b.append(el("strong", "", p.nama), el("span", "", jumlah + " materi"));
-      b.addEventListener("click", () => {
-        selProdi.value = selProdi.value === p.id ? "" : p.id;
-        render();
-        if (selProdi.value) $("#hasil").scrollIntoView();
-      });
-      grid.appendChild(b);
-    });
+  /* ---------- Pop-up pemutar ---------- */
+  function putar(v) {
+    const id = ytId(v.tautan);
+    if (!id) { window.open(v.tautan, "_blank", "noopener,noreferrer"); return; }
+    $("#player-judul").textContent = v.judul;
+    $("#player-link").href = v.tautan;
+    const f = document.createElement("iframe");
+    f.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&rel=0";
+    f.title = v.judul;
+    f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+    f.allowFullscreen = true;
+    box.textContent = "";
+    box.appendChild(f);
+    dlg.showModal();
   }
+  function tutup() { dlg.close(); }
+  dlg.addEventListener("close", () => { box.textContent = ""; });
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) tutup(); });
+  $("#tutup").addEventListener("click", tutup);
 
-  function kartu(m) {
+  /* ---------- Kartu ---------- */
+  function kartu(v, i) {
     const k = el("article", "card");
-    const badges = el("div", "badges");
-    const cls = m.jenis === "Video YouTube" ? "jenis-yt" : m.jenis === "Video Mahasiswa PLP" ? "jenis-mhs" : "";
-    badges.append(el("span", "badge " + cls, m.jenis), el("span", "badge", namaProdi(m.prodi)));
-    if (m.placeholder) badges.append(el("span", "badge ph", "Placeholder"));
-    k.append(badges, el("h3", "", m.judul), el("p", "", m.deskripsi));
+    k.style.setProperty("--d", Math.min(i, 12) * 0.05 + "s");
+    const h = Math.max(indeksProdi(v.prodi), 0) * 26;
+    const id = ytId(v.tautan);
 
-    if (m.placeholder || !urlAman(m.tautan)) {
-      const off = el("span", "btn off", "Tautan belum tersedia");
-      off.setAttribute("aria-disabled", "true");
-      k.append(off);
+    let thumb;
+    if (bisaDiputar(v)) {
+      thumb = el("button", "thumb");
+      thumb.type = "button";
+      thumb.setAttribute("aria-label", "Putar video: " + v.judul);
+      thumb.addEventListener("click", () => putar(v));
+      if (id) {
+        const img = document.createElement("img");
+        img.src = "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
+        img.alt = ""; img.loading = "lazy";
+        thumb.appendChild(img);
+      }
+      const p = el("div", "play"); p.appendChild(el("span", "", "▶"));
+      p.firstChild.setAttribute("aria-hidden", "true");
+      thumb.appendChild(p);
     } else {
-      const a = el("a", "btn", "Buka materi");
-      a.href = m.tautan;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-      a.setAttribute("aria-label", "Buka materi: " + m.judul + " (tab baru)");
-      k.append(a);
+      thumb = el("div", "thumb soon");
+      thumb.append(el("span", "", "🎬 Segera hadir"));
+    }
+    thumb.style.setProperty("--h", h);
+
+    const body = el("div", "body");
+    body.append(el("span", "tag", namaProdi(v.prodi)), el("h3", "", v.judul), el("p", "", v.deskripsi));
+    if (v.sumber) body.append(el("span", "src", "Sumber: " + v.sumber));
+    if (v.placeholder) body.append(el("span", "ph", "Contoh (placeholder)"));
+    k.append(thumb, body);
+
+    if (matchMedia("(pointer:fine)").matches) {
+      k.addEventListener("pointermove", (e) => {
+        const r = k.getBoundingClientRect();
+        k.style.setProperty("--ry", ((e.clientX - r.left) / r.width - 0.5) * 8 + "deg");
+        k.style.setProperty("--rx", (0.5 - (e.clientY - r.top) / r.height) * 8 + "deg");
+      });
+      k.addEventListener("pointerleave", () => { k.style.setProperty("--rx", "0deg"); k.style.setProperty("--ry", "0deg"); });
     }
     return k;
   }
 
-  function render() {
-    const q = cari.value.trim().toLowerCase();
-    const hasil = MATERI.filter((m) => {
-      if (selProdi.value && m.prodi !== selProdi.value) return false;
-      if (selJenis.value && m.jenis !== selJenis.value) return false;
-      if (!q) return true;
-      return (m.judul + " " + m.deskripsi + " " + namaProdi(m.prodi)).toLowerCase().includes(q);
-    });
-
-    daftar.textContent = "";
-    hasil.forEach((m) => daftar.appendChild(kartu(m)));
-    kosong.hidden = hasil.length > 0;
-    info.textContent = "Menampilkan " + hasil.length + " dari " + MATERI.length + " materi.";
-    grid.querySelectorAll(".prodi-btn").forEach((b) =>
-      b.setAttribute("aria-pressed", String(b.dataset.id === selProdi.value))
-    );
+  /* ---------- Filter chip ---------- */
+  function gambarChips() {
+    chips.textContent = "";
+    const buat = (id, label, n) => {
+      const b = el("button", "chip");
+      b.type = "button"; b.dataset.id = id;
+      b.append(label);
+      if (n !== null) b.append(el("small", "", "(" + n + ")"));
+      b.addEventListener("click", () => { prodiAktif = id; render(); });
+      chips.appendChild(b);
+    };
+    buat("", "Semua", VIDEO.length);
+    PROGRAM_STUDI.forEach((p) => buat(p.id, p.nama, VIDEO.filter((v) => v.prodi === p.id).length));
   }
 
-  tombolReset.addEventListener("click", () => {
-    cari.value = ""; selProdi.value = ""; selJenis.value = "";
-    render();
+  function render() {
+    const q = cari.value.trim().toLowerCase();
+    const hasil = VIDEO.filter((v) => {
+      if (prodiAktif && v.prodi !== prodiAktif) return false;
+      if (!q) return true;
+      return (v.judul + " " + v.deskripsi + " " + namaProdi(v.prodi) + " " + (v.sumber || "")).toLowerCase().includes(q);
+    });
+    daftar.textContent = "";
+    hasil.forEach((v, i) => daftar.appendChild(kartu(v, i)));
+    kosong.hidden = hasil.length > 0;
+    info.textContent = "Menampilkan " + hasil.length + " dari " + VIDEO.length + " video.";
+    chips.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.id === prodiAktif)));
+  }
+  cari.addEventListener("input", render);
+
+  /* ---------- Acak video ---------- */
+  $("#acak").addEventListener("click", () => {
+    const ok = VIDEO.filter(bisaDiputar);
+    if (!ok.length) { info.textContent = "Belum ada video asli yang bisa diacak. Tambahkan tautan di data.js."; $("#hasil").scrollIntoView(); return; }
+    putar(ok[Math.floor(Math.random() * ok.length)]);
   });
-  [cari, selProdi, selJenis].forEach((e) => e.addEventListener("input", render));
+
+  /* ---------- Angka statistik ---------- */
+  function hitung(id, ke) {
+    const e = $(id), reduce = matchMedia("(prefers-reduced-motion:reduce)").matches;
+    if (reduce || !ke) { e.textContent = ke; return; }
+    const t0 = performance.now();
+    (function tick(t) {
+      const p = Math.min((t - t0) / 1200, 1);
+      e.textContent = Math.round(ke * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+
+  /* ---------- Cahaya kursor ---------- */
+  addEventListener("pointermove", (e) => {
+    document.documentElement.style.setProperty("--mx", e.clientX + "px");
+    document.documentElement.style.setProperty("--my", e.clientY + "px");
+  }, { passive: true });
 
   $("#tahun").textContent = new Date().getFullYear();
-  isiFilter();
-  gambarProdi();
+  gambarChips();
   render();
+  hitung("#stat-video", VIDEO.filter(bisaDiputar).length);
+  hitung("#stat-prodi", PROGRAM_STUDI.length);
 })();
