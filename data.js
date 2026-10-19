@@ -1,8 +1,8 @@
 /* ===== 1. DAFTAR 14 PROGRAM STUDI =====
    Ubah hanya "nama". JANGAN ubah "id". */
 const PROGRAM_STUDI = [
-  { id: "prodi-01", nama: "Program Studi 1 (ganti nama)" },
-  { id: "prodi-02", nama: "Program Studi 2 (ganti nama)" },
+  { id: "prodi-01", nama: "Ekonomi" },
+  { id: "prodi-02", nama: "Program Studi 2 (Ekonomi)" },
   { id: "prodi-03", nama: "Program Studi 3 (ganti nama)" },
   { id: "prodi-04", nama: "Program Studi 4 (ganti nama)" },
   { id: "prodi-05", nama: "Program Studi 5 (ganti nama)" },
@@ -20,11 +20,11 @@ const PROGRAM_STUDI = [
 /* ===== 2. DAFTAR VIDEO ===== */
 const VIDEO = [
   {
-    judul: "Judul video pembelajaran",          // ← GANTI dengan judul asli video
+    judul: "Judul video ekonomi",                       // ← GANTI dengan judul asli video
     deskripsi: "Ringkasan 1–2 kalimat tentang isi video.", // ← GANTI
-    prodi: "prodi-01",                           // ← GANTI ke id prodi yang sesuai
+    prodi: "prodi-01",                                   // Ekonomi
     tautan: "https://youtu.be/GOuY64M5-MY",
-    sumber: ""                                   // ← isi nama kanal/pembuat (disarankan)
+    sumber: ""                                           // ← isi nama kanal/pembuat (disarankan)
   },
   {
     judul: "[CONTOH] Video pembelajaran kedua",
