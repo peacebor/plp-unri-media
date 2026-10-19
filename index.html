@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pusat Media Pembelajaran Digital — PLP Edukasi UNRI</title>
+  <meta name="description" content="Kumpulan tautan video pembelajaran dan materi untuk 14 program studi PLP Edukasi Universitas Riau.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#hasil">Lewati ke daftar materi</a>
+
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Universitas Riau • Pengenalan Lapangan Persekolahan</p>
+      <h1>Pusat Media Pembelajaran Digital — PLP Edukasi UNRI</h1>
+      <p class="lead">Video YouTube, video karya mahasiswa PLP, dan materi pembelajaran dari 14 program studi, dalam satu tempat.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section aria-labelledby="judul-prodi">
+      <h2 id="judul-prodi">Program Studi</h2>
+      <div id="prodi-grid" class="prodi-grid"></div>
+    </section>
+
+    <section aria-labelledby="judul-cari" class="panel">
+      <h2 id="judul-cari">Cari Materi</h2>
+      <div class="controls" role="search">
+        <div class="field">
+          <label for="cari">Kata kunci</label>
+          <input id="cari" type="search" placeholder="Ketik judul atau topik…" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="filter-prodi">Program studi</label>
+          <select id="filter-prodi"></select>
+        </div>
+        <div class="field">
+          <label for="filter-jenis">Jenis materi</label>
+          <select id="filter-jenis"></select>
+        </div>
+        <button id="reset" type="button" class="btn-ghost">Atur ulang</button>
+      </div>
+    </section>
+
+    <section id="hasil" aria-labelledby="judul-hasil" tabindex="-1">
+      <h2 id="judul-hasil">Daftar Materi</h2>
+      <p id="info" class="info" role="status" aria-live="polite"></p>
+      <div id="daftar" class="cards"></div>
+      <p id="kosong" class="empty" hidden>Tidak ada materi yang cocok. Coba kata kunci lain atau atur ulang filter.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <p>© <span id="tahun"></span> PLP Edukasi Universitas Riau. Tautan video eksternal dikelola pemilik masing-masing.</p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
