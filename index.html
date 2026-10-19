@@ -4,58 +4,61 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pusat Media Pembelajaran Digital — PLP Edukasi UNRI</title>
-  <meta name="description" content="Kumpulan tautan video pembelajaran dan materi untuk 14 program studi PLP Edukasi Universitas Riau.">
+  <meta name="description" content="Kumpulan video pembelajaran dari 14 program studi PLP Edukasi Universitas Riau.">
+  <meta name="theme-color" content="#0a0f24">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <a class="skip" href="#hasil">Lewati ke daftar materi</a>
+  <a class="skip" href="#hasil">Lewati ke daftar video</a>
+  <div class="bg" aria-hidden="true"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+  <div class="glow" aria-hidden="true"></div>
 
-  <header class="hero">
-    <div class="wrap">
-      <p class="eyebrow">Universitas Riau • Pengenalan Lapangan Persekolahan</p>
-      <h1>Pusat Media Pembelajaran Digital — PLP Edukasi UNRI</h1>
-      <p class="lead">Video YouTube, video karya mahasiswa PLP, dan materi pembelajaran dari 14 program studi, dalam satu tempat.</p>
+  <header class="hero wrap">
+    <p class="eyebrow">✨ Universitas Riau • Pengenalan Lapangan Persekolahan</p>
+    <h1>Pusat Media Pembelajaran Digital — <span class="grad">PLP Edukasi UNRI</span></h1>
+    <p class="lead">Belajar jadi lebih seru lewat video pilihan dari 14 program studi. Cari, tonton, dan temukan topik favoritmu.</p>
+    <div class="hero-actions">
+      <a class="btn" href="#hasil">▶ Mulai Nonton</a>
+      <button id="acak" class="btn ghost" type="button">🎲 Acak video</button>
     </div>
+    <dl class="stats">
+      <div><dt>Video</dt><dd id="stat-video" data-to="0">0</dd></div>
+      <div><dt>Program Studi</dt><dd id="stat-prodi" data-to="0">0</dd></div>
+    </dl>
   </header>
 
   <main class="wrap">
-    <section aria-labelledby="judul-prodi">
-      <h2 id="judul-prodi">Program Studi</h2>
-      <div id="prodi-grid" class="prodi-grid"></div>
-    </section>
-
-    <section aria-labelledby="judul-cari" class="panel">
-      <h2 id="judul-cari">Cari Materi</h2>
-      <div class="controls" role="search">
-        <div class="field">
-          <label for="cari">Kata kunci</label>
-          <input id="cari" type="search" placeholder="Ketik judul atau topik…" autocomplete="off">
-        </div>
-        <div class="field">
-          <label for="filter-prodi">Program studi</label>
-          <select id="filter-prodi"></select>
-        </div>
-        <div class="field">
-          <label for="filter-jenis">Jenis materi</label>
-          <select id="filter-jenis"></select>
-        </div>
-        <button id="reset" type="button" class="btn-ghost">Atur ulang</button>
+    <section class="panel" aria-labelledby="judul-cari">
+      <h2 id="judul-cari" class="sr">Cari video</h2>
+      <label for="cari" class="sr">Cari video</label>
+      <div class="search">
+        <span aria-hidden="true">🔍</span>
+        <input id="cari" type="search" placeholder="Cari judul atau topik video…" autocomplete="off">
       </div>
+      <p class="chips-label" id="lbl-prodi">Program studi</p>
+      <div id="chips" class="chips" role="group" aria-labelledby="lbl-prodi"></div>
     </section>
 
-    <section id="hasil" aria-labelledby="judul-hasil" tabindex="-1">
-      <h2 id="judul-hasil">Daftar Materi</h2>
+    <section id="hasil" tabindex="-1" aria-labelledby="judul-hasil">
+      <h2 id="judul-hasil">Daftar Video</h2>
       <p id="info" class="info" role="status" aria-live="polite"></p>
       <div id="daftar" class="cards"></div>
-      <p id="kosong" class="empty" hidden>Tidak ada materi yang cocok. Coba kata kunci lain atau atur ulang filter.</p>
+      <p id="kosong" class="empty" hidden>Belum ada video yang cocok. Coba kata kunci lain atau pilih “Semua”.</p>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="wrap">
-      <p>© <span id="tahun"></span> PLP Edukasi Universitas Riau. Tautan video eksternal dikelola pemilik masing-masing.</p>
-    </div>
+  <footer class="footer wrap">
+    <p>© <span id="tahun"></span> PLP Edukasi Universitas Riau. Hak cipta video milik masing-masing pembuatnya.</p>
   </footer>
+
+  <dialog id="player" aria-labelledby="player-judul">
+    <div class="player-head">
+      <h3 id="player-judul"></h3>
+      <button id="tutup" type="button" class="btn ghost" aria-label="Tutup video">✕</button>
+    </div>
+    <div id="player-box" class="player-box"></div>
+    <p class="player-foot"><a id="player-link" href="#" target="_blank" rel="noopener noreferrer">Buka di YouTube ↗</a></p>
+  </dialog>
 
   <script src="data.js"></script>
   <script src="script.js"></script>
